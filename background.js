@@ -7,9 +7,18 @@ chrome.alarms.onAlarm.addListener((alarm) => {
         chrome.storage.local.get(["timer", "isRunning"], (res) => {
             if (res.isRunning) {
                 let timer = (res.timer ?? 0) + 1
-                console.log(timer)
+                let isRunning = true
+                if (timer === 1500) {
+                    self.registration.showNotification("Focus Timer", {
+                        body: "25 minutes have passed!",
+                        icon: "icon-96.png"
+                    })
+                    timer = 0
+                    isRunning = false
+                }
                 chrome.storage.local.set({
                     timer,
+                    isRunning,
                 })
             }
         })
