@@ -1,0 +1,28 @@
+.btn {
+    padding: 7px 10px;
+    border-radius: 10px;
+    border: 1px solid rgb(186, 186, 186);
+    background-color: lightgray;
+    cursor: pointer;
+}
+
+.btn:hover {
+    background-color: rgb(192, 192, 192);
+}
+
+.input {
+    border-radius: 10px;
+    padding: 6px 10px;
+    border: 1px solid darkgray;
+    width: 40px;
+    margin-right: 4px;
+}
+
+.label {
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.status-msg {
+    color: rgb(0, 163, 0);
+}

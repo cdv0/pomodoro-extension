@@ -4,13 +4,13 @@ chrome.alarms.create("focusTimer", {
 
 chrome.alarms.onAlarm.addListener((alarm) => {
     if (alarm.name === "focusTimer") {
-        chrome.storage.local.get(["timer", "isRunning"], (res) => {
+        chrome.storage.local.get(["timer", "isRunning", "timeOption"], (res) => {
             if (res.isRunning) {
                 let timer = (res.timer ?? 0) + 1
                 let isRunning = true
-                if (timer === 1500) {
+                if (timer === 60 * res.timeOption) {
                     self.registration.showNotification("Focus Timer", {
-                        body: "25 minutes have passed!",
+                        body: `${res.timeOption} minutes have passed!`,
                         icon: "icon-96.png"
                     })
                     timer = 0
@@ -31,6 +31,7 @@ chrome.alarms.onAlarm.addListener((alarm) => {
 chrome.storage.local.get(["timer", "isRunning"], (res) => {
     chrome.storage.local.set({
         timer: "timer" in res ? res.timer : 0,
+        timeOption: "timeOption" in res? res.timeOption : 25,
         isRunning: "isRunning" in res ? res.isRunning : false,
     })
 })
