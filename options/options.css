@@ -1,21 +1,33 @@
+body {
+    background-color: rgb(232, 244, 255);
+}
+
 .btn {
     padding: 7px 10px;
     border-radius: 10px;
-    border: 1px solid rgb(186, 186, 186);
-    background-color: lightgray;
+    border: none;
+    background-color: rgb(180, 210, 240);
+    color: rgb(30, 50, 70);
     cursor: pointer;
 }
 
 .btn:hover {
-    background-color: rgb(192, 192, 192);
+    background-color: rgb(165, 200, 235);
 }
 
 .input {
     border-radius: 10px;
     padding: 6px 10px;
-    border: 1px solid darkgray;
-    width: 40px;
+    border: none;
+    background-color: white;
+    min-width: 150px;
+    max-width: 300px;
     margin-right: 4px;
+}
+
+.input:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(120, 160, 200, 0.25);
 }
 
 .label {
@@ -23,6 +35,17 @@
     font-weight: 500;
 }
 
+#save-btn {
+    display: block;
+    margin-top: 20px;
+}
+
 .status-msg {
     color: rgb(0, 163, 0);
+}
+
+#title {
+    font-size: 28px;
+    font-weight: 600;
+    text-align: center;
 }

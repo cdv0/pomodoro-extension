@@ -21,6 +21,9 @@ setInterval(updateTime, 1000) // setInterval does not block the main thread. It 
 
 const startTimerBtn = document.getElementById("start-timer-btn")
 
+const emptyStatusContainer = document.getElementById("empty-status-container")
+
+
 // Set initial button text based on saved isRunning state
 chrome.storage.local.get(["isRunning"], (res) => {
     startTimerBtn.textContent = res.isRunning ? "Pause Timer" : "Start timer"
@@ -70,6 +73,23 @@ function addTask() {
   renderTasks();
 }
 
+function renderEmptyMessage() {
+  const emptyStatusContainer = document.getElementById("empty-status-container");
+
+  if (tasks.length === 0) {
+    emptyStatusContainer.style.display = "block";
+
+    emptyStatusContainer.textContent = "";
+    const textStatus = document.createElement("p");
+    textStatus.classList.add("empty-msg");
+    textStatus.textContent = "No tasks yet.";
+
+    emptyStatusContainer.appendChild(textStatus);
+  } else {
+    emptyStatusContainer.style.display = "none";
+  }
+}
+
 // Redraws the UI. Creates one row of the input/button task UI
 function renderTask(taskNum) {
   const taskRow = document.createElement("div");
@@ -111,6 +131,8 @@ function deleteTask(taskNum) {
 function renderTasks() {
   const taskContainer = document.getElementById("task-container");
   taskContainer.textContent = "";
+
+  renderEmptyMessage();
 
   // forEach creates taskNum for us, the index. It's basically a enumerate in Python.
   // E.g. for i, task in enumerate(tasks): renderTask(i)
