@@ -1,7 +1,54 @@
 let tasks = [];
 
+function updateTime() {
+    chrome.storage.local.get(["timer"], (res) => {
+        const time = document.getElementById("timer");
+
+        const totalSeconds = res.timer ?? 0;
+        const remaining = 1500 - totalSeconds; // 25 min = 1500 sec
+
+        const minutes = Math.floor(remaining / 60);
+        const seconds = remaining % 60;
+
+        const formattedMinutes = String(minutes).padStart(2, "0");
+        const formattedSeconds = String(seconds).padStart(2, "0");
+
+        time.textContent = `${formattedMinutes}:${formattedSeconds}`;
+    });
+}
+updateTime()
+setInterval(updateTime, 1000) // setInterval does not block the main thread. It schedules a callback for later.
+
+const startTimerBtn = document.getElementById("start-timer-btn")
+
+// Set initial button text based on saved isRunning state
+chrome.storage.local.get(["isRunning"], (res) => {
+    startTimerBtn.textContent = res.isRunning ? "Pause Timer" : "Start timer"
+})
+
+// Toggle the start timer button between start and pause
+startTimerBtn.addEventListener("click", () => {
+    chrome.storage.local.get(["isRunning"], (res) => {
+        chrome.storage.local.set({
+                isRunning: !res.isRunning,
+        }, () => {
+            startTimerBtn.textContent = !res.isRunning ? "Pause timer" : "Start timer"
+        })
+    })
+})
+
+// Add task button
 const addTaskBtn = document.getElementById("add-task-btn");
 addTaskBtn.addEventListener("click", addTask);
+
+// Reset timer button
+const resetTimerBtn = document.getElementById("reset-timer-btn")
+resetTimerBtn.addEventListener("click", () => {
+    chrome.storage.local.set({
+        timer: 0,
+        isRunning: false
+    }, () => startTimerBtn.textContent = "Start timer")
+})
 
 // Populates tasks array from data in the chrome storage
 chrome.storage.sync.get(["tasks"], (res) => {
