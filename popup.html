@@ -8,19 +8,31 @@
 </head>
 <body>
     <div id="header">
-        <img id="icon" src="icon-96.png"/>
-        <h1 id="title">Focus Timer</h1>
+        <div class="logo">
+            <img id="icon" src="icon-96.png"/>
+            <h1 id="title">Focus Timer</h1>
+        </div>
+
+        <p class="label-blue">Focusing</p>
     </div>
 
-    <p id="timer">00:00</h1>
+    <div id="timer-container">
+        <p class="label">TIME REMAINING</p>
+        <p id="timer">00:00</h1>
+        <progress id="file"></progress>
+    </div>
 
     <div class="btn-container">
-        <button class="btn" id="reset-timer-btn">Reset timer</button>
-        <button class="btn" id="start-timer-btn">Start timer</button>
-        <button class="btn" id="add-task-btn">Add task</button>
+        <button class="btn btn-outline" id="reset-timer-btn">Reset</button>
+        <button class="btn btn-blue" id="start-timer-btn">Start</button>
+        <button class="btn btn-outline" id="add-task-btn">+ Task</button>
     </div>
 
-    <h2 class="subheader">Tasklist:</h2>
+    <div id="tasklist-header">
+        <p class="label" id="tasklist-text">TASKLIST</p>
+        <button class="btn-label-gray" id="btn-clear">Clear</button>
+    </div>
+
     <div id="empty-status-container"></div>
     <div id="task-container">
         <!-- <input class="input" placeholder="Enter task name"/>

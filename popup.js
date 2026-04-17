@@ -23,10 +23,19 @@ const startTimerBtn = document.getElementById("start-timer-btn")
 
 const emptyStatusContainer = document.getElementById("empty-status-container")
 
+const btnClear = document.getElementById("btn-clear")
+btnClear.addEventListener("click", clearTasks);
+
+function clearTasks() {
+  tasks = [];
+  chrome.storage.sync.set({ tasks: [] }, () => {
+    renderTasks();
+  });
+}
 
 // Set initial button text based on saved isRunning state
 chrome.storage.local.get(["isRunning"], (res) => {
-    startTimerBtn.textContent = res.isRunning ? "Pause Timer" : "Start timer"
+    startTimerBtn.textContent = res.isRunning ? "Pause" : "Start"
 })
 
 // Toggle the start timer button between start and pause
@@ -35,7 +44,7 @@ startTimerBtn.addEventListener("click", () => {
         chrome.storage.local.set({
                 isRunning: !res.isRunning,
         }, () => {
-            startTimerBtn.textContent = !res.isRunning ? "Pause timer" : "Start timer"
+            startTimerBtn.textContent = !res.isRunning ? "Pause" : "Start"
         })
     })
 })
@@ -50,12 +59,13 @@ resetTimerBtn.addEventListener("click", () => {
     chrome.storage.local.set({
         timer: 0,
         isRunning: false
-    }, () => startTimerBtn.textContent = "Start timer")
+    }, () => startTimerBtn.textContent = "Start")
 })
 
 // Populates tasks array from data in the chrome storage
 chrome.storage.sync.get(["tasks"], (res) => {
   tasks = res.tasks ? res.tasks : [];
+  tasks = tasks.map((task) => typeof task === "string" ? { text: task, done: false } : task);
   renderTasks();
 });
 
@@ -68,7 +78,7 @@ function saveTasks() {
 
 // Adds a new empty input/button UI
 function addTask() {
-  tasks.push(""); // Adds an empty string because a new task starts as blank text
+  tasks.push({ text: "", done: false }); // Adds an empty string because a new task starts as blank text
   saveTasks();
   renderTasks();
 }
@@ -95,26 +105,44 @@ function renderTask(taskNum) {
   const taskRow = document.createElement("div");
   taskRow.classList.add("task-row");
 
+  const checkBtn = document.createElement("button");
+  checkBtn.classList.add("btn-check");
+
   const text = document.createElement("input");
   text.classList.add("input");
   text.type = "text";
   text.placeholder = "Enter a task";
-  text.value = tasks[taskNum];
+  text.value = tasks[taskNum].text;
+
+  if (tasks[taskNum].done) {
+    text.style.textDecoration = "line-through";
+    checkBtn.classList.add("checked");
+    text.classList.add("checked");
+  } else {
+    text.classList.remove("checked");
+  }
+
+  checkBtn.addEventListener("click", () => {
+    tasks[taskNum].done = !tasks[taskNum].done;
+    saveTasks();
+    renderTasks();
+  });
 
   text.addEventListener("change", (event) => {
-    tasks[taskNum] = event.target.value;
+    tasks[taskNum].text = event.target.value;
     saveTasks();
   });
 
   const deleteBtn = document.createElement("input");
-  deleteBtn.classList.add("btn");
+  deleteBtn.classList.add("btn-label-gray");
   deleteBtn.type = "button";
-  deleteBtn.value = "Done";
+  deleteBtn.value = "x";
 
   deleteBtn.addEventListener("click", () => {
     deleteTask(taskNum);
   });
 
+  taskRow.appendChild(checkBtn);
   taskRow.appendChild(text);
   taskRow.appendChild(deleteBtn);
 
